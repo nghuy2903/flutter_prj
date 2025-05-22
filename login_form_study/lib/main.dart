@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:login_form_study/loadProduct.dart';
 
 void main() {
   return runApp(MaterialApp(
@@ -14,14 +15,43 @@ void main() {
         // body: const Center(
         //   child: Text("HelloWorld!")
         // )
-        body: MyDemo()
+        body: Loadproduct()
       ),
     ),
   ));
 }
 
 class MyDemo extends StatelessWidget{
-  const MyDemo({super.key});
+  final emailController = TextEditingController();
+  final passController = TextEditingController();
+
+  MyDemo({super.key});
+  
+  
+  void checkUser(BuildContext context){
+    String email =  emailController.text.trim();
+    String pass = passController.text;
+
+    if(email == 'test@gmail.com' && pass == '123'){
+      Navigator.push(
+        context, MaterialPageRoute(builder: (context) => Loadproduct())
+      );
+    }else{
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: Text("Đăng nhập thất bại"),
+          content: Text("Sai email hoặc mật khẩu."),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("OK"),
+            )
+          ],
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +128,7 @@ class MyDemo extends StatelessWidget{
                       ),
                       //Icon trong ô
                       child: TextField(
+                        controller: emailController,
                         decoration: InputDecoration(
                           hintText: 'Email đăng ký',
                           hintStyle: TextStyle(
@@ -124,6 +155,7 @@ class MyDemo extends StatelessWidget{
                       ),
                       //Icon trong ô
                       child: TextField(
+                        controller: passController,
                         decoration: InputDecoration(
                           hintText: 'Mật khẩu',
                           hintStyle: TextStyle(
@@ -160,6 +192,7 @@ class MyDemo extends StatelessWidget{
                       child: ElevatedButton(
                         onPressed: (){
                           //Xử lý nút nhấn
+                          checkUser(context);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
@@ -289,5 +322,7 @@ class MyDemo extends StatelessWidget{
       ),
     );
   }
+
+  
 
 }
