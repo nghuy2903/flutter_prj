@@ -179,7 +179,6 @@ class MyDemo extends StatelessWidget{
                       
                     ),
 
-                    //Ô GooglColor.fromARGB(255, 2, 28, 49)
                     Container(
                       margin: EdgeInsets.fromLTRB(5, 25, 10, 10),
                       child: Row(
@@ -200,10 +199,13 @@ class MyDemo extends StatelessWidget{
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children:[ 
-                                  Icon(
-                                    Icons.account_box,
-                                    color: Colors.white,
-                                    size: 30,
+                                  ClipOval(
+                                    child: Image.asset(
+                                      'assets/images/gg_logo.jpg',
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
                                   SizedBox(width: 8,),
                                   Text(
@@ -234,10 +236,13 @@ class MyDemo extends StatelessWidget{
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children:[
-                                  Icon(
-                                    Icons.verified_user,
-                                    color: Colors.white,
-                                    size: 30,
+                                  ClipOval(
+                                    child: Image.asset(
+                                      'assets/images/fb_logo.jpg',
+                                      width: 40,
+                                      height: 40,
+                                      fit: BoxFit.cover
+                                    ),
                                   ),
                                   SizedBox(width: 8,),
                                   Text(
@@ -257,7 +262,22 @@ class MyDemo extends StatelessWidget{
 
                     //Text cuối
                     Container(
-                      
+                      margin: EdgeInsets.only(top: 20),
+                      alignment: Alignment.center,
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Chưa có tài khoản? ',
+                          children: [
+                            TextSpan(
+                              text: 'Đăng ký',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              )
+                            )
+                          ]
+                        ),
+                      ),
                     )
                   ],
                 ),               
