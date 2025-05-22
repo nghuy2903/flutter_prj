@@ -155,21 +155,110 @@ class MyDemo extends StatelessWidget{
                     
                     //Ô đăng nhập
                     Container(
-                      margin: EdgeInsets.all(16), // tạo khoảng cách so với mép
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        border: Border.all(color: Colors.grey),
-                      ),
-                      //Icon trong ô
-                      child: Text(
+                      margin: EdgeInsets.fromLTRB(16, 25, 16, 15),
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: (){
+                          //Xử lý nút nhấn
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          padding: EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          )
+                        ), 
+                        child: Text(
                           'ĐĂNG NHẬP',
                           style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30
+                            fontSize: 30,
+                            color: Colors.white
                           ),
-                        )
+                        ),
+                      ),
+                      
                     ),
 
+                    //Ô GooglColor.fromARGB(255, 2, 28, 49)
+                    Container(
+                      margin: EdgeInsets.fromLTRB(5, 25, 10, 10),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            //Nút google
+                            child: ElevatedButton(
+                              onPressed: (){
+                                //Xử lý logic 
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero
+                                )
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children:[ 
+                                  Icon(
+                                    Icons.account_box,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Text(
+                                    'Google',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white
+                                    ),
+                                  ),
+                                ]
+                              )
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            //Nút facebook
+                            child: ElevatedButton(
+                              onPressed: (){
+                                //Xử lý logic 
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero
+                                )
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children:[
+                                  Icon(
+                                    Icons.verified_user,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 8,),
+                                  Text(
+                                    'FaceBook',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ]
+                              )
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+
+                    //Text cuối
+                    Container(
+                      
+                    )
                   ],
                 ),               
               ),
