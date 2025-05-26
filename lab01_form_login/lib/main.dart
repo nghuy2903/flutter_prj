@@ -52,16 +52,16 @@ class MyApp extends StatelessWidget{
             child: Container(
               width: size.width*0.8,
               height: size.height * 0.7,
-              padding: EdgeInsets.all(15),
+              padding: EdgeInsets.all(40),
               decoration: BoxDecoration(
-                color: Colors.grey
+                color: Color.fromRGBO(128, 128, 128, 0.5)
               ),
               child: Column(
                 
                 children: [
                   //user
                   Container(
-                    margin: EdgeInsets.only(bottom: 16),
+                    margin: EdgeInsets.only(bottom: 25),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -80,16 +80,34 @@ class MyApp extends StatelessWidget{
                           ],
                         ),
 
-                        SizedBox(height: 8,),
-
-                        TextField(
-                          
-                          decoration: InputDecoration(
-                            labelText: 'UserName',
-                            border: OutlineInputBorder(),
-                          ),
-                          
-                        ),
+                        SizedBox(height: 20,),
+                        
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Positioned(
+                              left: -5,
+                              bottom: -5,
+                              child: Container(
+                                width: size.width * 0.6,
+                                height: 25,
+                                color: Colors.greenAccent,
+                              ), 
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'UserName',
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                                border: OutlineInputBorder(),
+                                filled: true,
+                                fillColor: Colors.white,
+                              ),
+                            ),
+                          ],
+                        )
                         
                       ],
                     )
