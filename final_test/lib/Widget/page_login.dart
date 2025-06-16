@@ -1,8 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:final_test/MVC/db/user_dao.dart';
 
-
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _userDAO = UserDAO();
+  bool _isLoading = false;
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin() async {
+    // Kiểm tra dữ liệu nhập vào
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng nhập đầy đủ email và mật khẩu'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final user = await _userDAO.login(_emailController.text, _passwordController.text);
+      
+      if (user != null) {
+        // Đăng nhập thành công
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Đăng nhập thành công!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          // TODO: Chuyển đến trang chính sau khi đăng nhập thành công
+        }
+      } else {
+        // Đăng nhập thất bại
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Email hoặc mật khẩu không đúng'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Có lỗi xảy ra: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +146,8 @@ class LoginPage extends StatelessWidget {
                     width: widthScreen * 0.85,
                     height: 60,
                     child: TextField(
+                      controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.email),
                         labelText: 'Email',
@@ -87,9 +166,21 @@ class LoginPage extends StatelessWidget {
                     width: widthScreen * 0.85,
                     height: 60,
                     child: TextField(
+                      controller: _passwordController,
+                      obscureText: _obscurePassword,
                       decoration: InputDecoration(
                         prefixIcon: Icon(Icons.lock),
                         labelText: 'Mật khẩu',
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscurePassword = !_obscurePassword;
+                            });
+                          },
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.grey.shade100),
@@ -105,16 +196,23 @@ class LoginPage extends StatelessWidget {
                     width: widthScreen * 0.85,
                     height: 60,
                     child: ElevatedButton.icon(
-                      onPressed: () {
-                        //backend
-                      },
-                      icon: Icon(
-                        Icons.login,
-                        color: Colors.white,
-                        size: 30,
-                      ),
+                      onPressed: _isLoading ? null : _handleLogin,
+                      icon: _isLoading 
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Icon(
+                            Icons.login,
+                            color: Colors.white,
+                            size: 30,
+                          ),
                       label: Text(
-                        'Đăng nhập',
+                        _isLoading ? 'Đang đăng nhập...' : 'Đăng nhập',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -133,8 +231,7 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 20,),
                   //Text Quên mật khẩu
                   TextButton.icon(
-                    onPressed: (
-                    ) {
+                    onPressed: _isLoading ? null : () {
                       Navigator.pushNamed(context, '/forgot-password');
                     },
                     icon: Icon(Icons.key, color: Colors.blue),
@@ -158,7 +255,7 @@ class LoginPage extends StatelessWidget {
                           endIndent: 45,
                         ),
                         Container(
-                          color: Colors.white, // Nền trắng đè lên divider
+                          color: Colors.white,
                           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                           child: Text(
                             'hoặc',
@@ -188,7 +285,7 @@ class LoginPage extends StatelessWidget {
                     width: widthScreen * 0.85 * 0.6, 
                     height: 60,
                     child: OutlinedButton.icon(
-                      onPressed: () {
+                      onPressed: _isLoading ? null : () {
                          Navigator.pushNamed(context, '/register');
                       },
                       icon: Icon(Icons.person_add, color: Colors.blue, size: 30,),
@@ -201,7 +298,7 @@ class LoginPage extends StatelessWidget {
                         ),
                       ),
                       style: OutlinedButton.styleFrom(
-                        side: BorderSide(color: Colors.blue, width: 2), // Viền màu xanh
+                        side: BorderSide(color: Colors.blue, width: 2),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
                         ),
