@@ -58,6 +58,15 @@ class _PageRegister extends State<PageRegister> {
     });
   }
 
+  // Hàm kiểm tra định dạng email
+  bool _isValidEmail(String email) {
+    // Biểu thức chính quy để kiểm tra định dạng email
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(email);
+  }
+
   // Hàm xử lý đăng ký
   Future<void> _handleRegister() async {
     // Kiểm tra dữ liệu nhập vào
@@ -70,6 +79,17 @@ class _PageRegister extends State<PageRegister> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Vui lòng nhập đầy đủ thông tin'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Kiểm tra định dạng email
+    if (!_isValidEmail(_emailController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Email không đúng định dạng'),
           backgroundColor: Colors.red,
         ),
       );

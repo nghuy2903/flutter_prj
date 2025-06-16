@@ -10,14 +10,15 @@ void main() async {
   // Đảm bảo Flutter được khởi tạo
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Khởi tạo dữ liệu mẫu
-  final initData = InitData();
-  await initData.initSampleData();
+  // // Khởi tạo dữ liệu mẫu
+  // final initData = InitData();
+  // await initData.initSampleData();
 
   final userDao = UserDAO();
 
   // ✅ Kiểm tra lại danh sách user
   final allUsers = await userDao.getAllUsers();
+  userDao.deleteUser(4);
   for (var user in allUsers) {
     print('ID: ${user.id}, Email: ${user.email}');
   }

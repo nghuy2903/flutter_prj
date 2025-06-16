@@ -1,7 +1,80 @@
 import 'package:flutter/material.dart';
+import 'package:final_test/MVC/db/user_dao.dart';
+import 'package:final_test/utils/mail_helper.dart';
 
-class FogotPasswordPage extends StatelessWidget {
+class FogotPasswordPage extends StatefulWidget {
   const FogotPasswordPage({super.key});
+
+  @override
+  State<FogotPasswordPage> createState() => _FogotPasswordPageState();
+}
+
+class _FogotPasswordPageState extends State<FogotPasswordPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final UserDAO _userDAO = UserDAO();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleSendMail() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Vui lòng nhập email'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+    try {
+      final user = await _userDAO.getUserByEmail(email);
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email không tồn tại trong hệ thống'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+      // Sinh mật khẩu mới
+      final newPassword = MailHelper.generateStrongPassword(length: 10);
+      // Gửi mail
+      await MailHelper.sendMail(
+        toEmail: user.email,
+        subject: 'Mật khẩu mới cho tài khoản UTC2',
+        content: 'Mật khẩu mới của bạn là: $newPassword\nHãy đăng nhập và đổi lại mật khẩu ngay sau khi đăng nhập.',
+      );
+      // Cập nhật mật khẩu mới vào database
+      final updatedUser = user.copyWith(password: newPassword);
+      await _userDAO.updateUser(updatedUser);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đã gửi mật khẩu mới về email của bạn!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +191,9 @@ class FogotPasswordPage extends StatelessWidget {
                 SizedBox(height: 35,),
                 //Textfield Email
                 SizedBox(
-                  // padding: EdgeInsets.all(5),
                   width: widthScreen * 0.85,
                   child: TextField(
+                    controller: _emailController,
                     decoration: InputDecoration(
                       prefixIcon: Icon(Icons.email, color: Colors.grey, size: 20,),
                       hintText: 'Email',
@@ -146,10 +219,19 @@ class FogotPasswordPage extends StatelessWidget {
                   width: widthScreen*0.85,
                   height: 50,
                   child: ElevatedButton.icon(
-                    onPressed: (){}, 
-                    icon: Icon(Icons.send, color: Colors.white,),
+                    onPressed: _isLoading ? null : _handleSendMail,
+                    icon: _isLoading
+                        ? SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Icon(Icons.send, color: Colors.white,),
                     label: Text(
-                      'Gửi liên kết đặt lại',
+                      _isLoading ? 'Đang gửi...' : 'Gửi liên kết đặt lại',
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -205,7 +287,5 @@ class FogotPasswordPage extends StatelessWidget {
         )
       )
     );
-
-
   }
 }
