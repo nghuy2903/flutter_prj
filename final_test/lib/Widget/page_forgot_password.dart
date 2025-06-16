@@ -116,16 +116,85 @@ class FogotPasswordPage extends StatelessWidget {
 
               SizedBox(height: 35,),
               //Textfield Email
-              TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.email, color: Colors.grey),
-                  labelText: 'Email',
-                  labelStyle: TextStyle(color: Colors.grey),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide: BorderSide(color: Colors.blue.shade100),
+              SizedBox(
+                // padding: EdgeInsets.all(5),
+                width: widthScreen * 0.85,
+                child: TextField(
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.email, color: Colors.grey, size: 20,),
+                    labelText: 'Email',
+                    labelStyle: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 15
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(color: Colors.grey.shade300)
+                    ),
+                    contentPadding: EdgeInsets.symmetric( vertical: 20)
                   ),
                 ),
+              ),
+
+              SizedBox(height: 35,),
+              //Button Gửi liên kết
+              SizedBox(
+                width: widthScreen*0.85,
+                height: 50,
+                child: ElevatedButton.icon(
+                  onPressed: (){}, 
+                  icon: Icon(Icons.send, color: Colors.white,),
+                  label: Text(
+                    'Gửi liên kết đặt lại',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange[400],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)
+                    )
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 40,),
+              //Text button quay lại
+              TextButton.icon(
+                onPressed: (){}, 
+                label: Text('Quay lại trang đăng nhập', style: TextStyle(fontWeight: FontWeight.bold),),
+                icon: Icon(Icons.turn_left),
+              ),
+
+              SizedBox(height: 45,),
+              //TextRich vấn đề hỗ trợ
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Gặp vấn đề? ',
+                    style: TextStyle(fontSize: 17),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // TODO: Chuyển đến trang hỗ trợ
+                    },
+                    child: Text(
+                      'Liên hệ hỗ trợ',
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ]
           )
