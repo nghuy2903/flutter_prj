@@ -9,9 +9,9 @@ class MailHelper {
     required String subject,
     required String content,
   }) async {
-    // Thông tin SMTP, bạn cần thay đổi cho phù hợp
-    String username = 'nghuy29032004@gmail.com'; // Thay bằng email của bạn
-    String password = 'nkgd eswl exaq lndc'; // Thay bằng app password (không phải mật khẩu gmail thông thường)
+    // Thông tin SMTP
+    String username = 'nghuy29032004@gmail.com';
+    String password = 'nkgd eswl exaq lndc'; 
 
     final smtpServer = gmail(username, password);
 
