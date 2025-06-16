@@ -336,12 +336,14 @@ class _PageRegister extends State<PageRegister>{
                 ),
           
                 SizedBox(height: 15,),
-                //button đăng ký
+                //button đăng nhập
                 SizedBox(
                   width: widthScreen * 0.85 * 0.4, 
                   height: 50,
                   child: OutlinedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                       Navigator.pushNamed(context, '/login');
+                    },
                     icon: Icon(Icons.login, color: Colors.blue, size: 30,),
                     label: Text(
                       'Đăng nhập ngay',

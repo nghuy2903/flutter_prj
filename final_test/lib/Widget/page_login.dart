@@ -133,8 +133,9 @@ class LoginPage extends StatelessWidget {
                   SizedBox(height: 20,),
                   //Text Quên mật khẩu
                   TextButton.icon(
-                    onPressed: () {
-                      
+                    onPressed: (
+                    ) {
+                      Navigator.pushNamed(context, '/forgot-password');
                     },
                     icon: Icon(Icons.key, color: Colors.blue),
                     label: Text(
@@ -187,7 +188,9 @@ class LoginPage extends StatelessWidget {
                     width: widthScreen * 0.85 * 0.6, 
                     height: 60,
                     child: OutlinedButton.icon(
-                      onPressed: () {},
+                      onPressed: () {
+                         Navigator.pushNamed(context, '/register');
+                      },
                       icon: Icon(Icons.person_add, color: Colors.blue, size: 30,),
                       label: Text(
                         'Đăng ký',

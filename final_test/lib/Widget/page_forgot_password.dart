@@ -167,7 +167,9 @@ class FogotPasswordPage extends StatelessWidget {
               SizedBox(height: 40,),
               //Text button quay lại
               TextButton.icon(
-                onPressed: (){}, 
+                onPressed: (){
+                   Navigator.pushNamed(context, '/login');
+                }, 
                 label: Text('Quay lại trang đăng nhập', style: TextStyle(fontWeight: FontWeight.bold),),
                 icon: Icon(Icons.turn_left),
               ),
