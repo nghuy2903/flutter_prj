@@ -1,3 +1,5 @@
+import 'package:final_test/MVC/db/database_helper.dart';
+import 'package:final_test/MVC/db/user_dao.dart';
 import 'package:final_test/Widget/page_forgot_password.dart';
 import 'package:final_test/Widget/page_login.dart';
 import 'package:final_test/Widget/page_register.dart';
@@ -11,6 +13,14 @@ void main() async {
   // Khởi tạo dữ liệu mẫu
   final initData = InitData();
   await initData.initSampleData();
+
+  final userDao = UserDAO();
+
+  // ✅ Kiểm tra lại danh sách user
+  final allUsers = await userDao.getAllUsers();
+  for (var user in allUsers) {
+    print('ID: ${user.id}, Email: ${user.email}');
+  }
   
   runApp(const MyApp());
 }
