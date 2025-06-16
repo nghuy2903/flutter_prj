@@ -1,5 +1,6 @@
-import 'package:final_test/MVC/db/database_helper.dart';
-import 'package:final_test/MVC/model/user.dart';
+import 'package:final_test/DB/db/database_helper.dart';
+import 'package:final_test/DB/model/user.dart';
+
 
 class UserDAO {
   final dbHelper = DatabaseHelper.instance;

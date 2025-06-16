@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:final_test/MVC/db/user_dao.dart';
+import 'package:final_test/DB/db/user_dao.dart';
 import 'package:final_test/utils/mail_helper.dart';
 
 class FogotPasswordPage extends StatefulWidget {

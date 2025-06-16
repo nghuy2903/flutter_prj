@@ -1,9 +1,9 @@
-import 'package:final_test/MVC/db/database_helper.dart';
-import 'package:final_test/MVC/db/user_dao.dart';
-import 'package:final_test/Widget/page_forgot_password.dart';
-import 'package:final_test/Widget/page_login.dart';
-import 'package:final_test/Widget/page_register.dart';
-import 'package:final_test/MVC/db/init_data.dart';
+import 'package:final_test/DB/db/database_helper.dart';
+import 'package:final_test/DB/db/user_dao.dart';
+import 'package:final_test/Screens/page_forgot_password.dart';
+import 'package:final_test/Screens/page_login.dart';
+import 'package:final_test/Screens/page_register.dart';
+import 'package:final_test/DB/db/init_data.dart';
 import 'package:flutter/material.dart';
 
 void main() async {

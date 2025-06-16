@@ -1,5 +1,5 @@
-import 'package:final_test/MVC/db/user_dao.dart';
-import 'package:final_test/MVC/model/user.dart';
+import 'package:final_test/DB/db/user_dao.dart';
+import 'package:final_test/DB/model/user.dart';
 
 class InitData {
   final UserDAO _userDAO = UserDAO();
