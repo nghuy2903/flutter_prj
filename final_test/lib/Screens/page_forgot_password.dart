@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:final_test/DB/db/user_dao.dart';
+import 'package:provider/provider.dart';
+import 'package:final_test/DB/provider/user_provider.dart';
 import 'package:final_test/utils/mail_helper.dart';
 
 class FogotPasswordPage extends StatefulWidget {
@@ -11,7 +12,6 @@ class FogotPasswordPage extends StatefulWidget {
 
 class _FogotPasswordPageState extends State<FogotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
-  final UserDAO _userDAO = UserDAO();
   bool _isLoading = false;
 
   @override
@@ -31,12 +31,19 @@ class _FogotPasswordPageState extends State<FogotPasswordPage> {
       );
       return;
     }
+
+    if (!mounted) return;
     setState(() {
       _isLoading = true;
     });
+
     try {
-      final user = await _userDAO.getUserByEmail(email);
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      
+      // Kiểm tra email tồn tại
+      final user = await userProvider.getUserByEmail(email);
       if (user == null) {
+        if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Email không tồn tại trong hệ thống'),
@@ -45,34 +52,45 @@ class _FogotPasswordPageState extends State<FogotPasswordPage> {
         );
         return;
       }
+
       // Sinh mật khẩu mới
       final newPassword = MailHelper.generateStrongPassword(length: 10);
-      // Gửi mail
+      
+      // Cập nhật mật khẩu mới vào database trước
+      final updatedUser = user.copyWith(password: newPassword);
+      await userProvider.updateUser(updatedUser);
+
+      // Sau đó mới gửi mail
       await MailHelper.sendMail(
         toEmail: user.email,
         subject: 'Mật khẩu mới cho tài khoản UTC2',
         content: 'Mật khẩu mới của bạn là: $newPassword\nHãy đăng nhập và đổi lại mật khẩu ngay sau khi đăng nhập.',
       );
-      // Cập nhật mật khẩu mới vào database
-      final updatedUser = user.copyWith(password: newPassword);
-      await _userDAO.updateUser(updatedUser);
+
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Đã gửi mật khẩu mới về email của bạn!'),
           backgroundColor: Colors.green,
         ),
       );
+      
+      // Quay về trang đăng nhập sau khi hoàn thành
+      Navigator.pop(context);
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Có lỗi xảy ra: ${e.toString()}'),
+          content: Text('Có lỗi xảy ra: $e'),
           backgroundColor: Colors.red,
         ),
       );
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 

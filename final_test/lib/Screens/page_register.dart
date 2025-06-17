@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:final_test/DB/db/user_dao.dart';
+import 'package:provider/provider.dart';
+import 'package:final_test/DB/provider/user_provider.dart';
 import 'package:final_test/DB/model/user.dart';
 
 class PageRegister extends StatefulWidget {
@@ -28,9 +29,6 @@ class _PageRegister extends State<PageRegister> {
   
   // Danh sách giới tính
   final List<String> _genders = ['Nam', 'Nữ', 'Khác'];
-  
-  // UserDAO để xử lý database
-  final _userDAO = UserDAO();
 
   @override
   void dispose() {
@@ -123,17 +121,17 @@ class _PageRegister extends State<PageRegister> {
     });
 
     try {
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      
       // Kiểm tra email đã tồn tại chưa
-      final existingUser = await _userDAO.getUserByEmail(_emailController.text);
+      final existingUser = await userProvider.getUserByEmail(_emailController.text);
       if (existingUser != null) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email này đã được sử dụng'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Email này đã được sử dụng'),
+            backgroundColor: Colors.red,
+          ),
+        );
         return;
       }
 
@@ -148,33 +146,27 @@ class _PageRegister extends State<PageRegister> {
       );
 
       // Thêm vào database
-      await _userDAO.insertUser(newUser);
+      await userProvider.insertUser(newUser);
 
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Đăng ký thành công!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        // Quay về trang đăng nhập
-        Navigator.pop(context);
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Đăng ký thành công!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      // Quay về trang đăng nhập
+      Navigator.pop(context);
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Có lỗi xảy ra: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

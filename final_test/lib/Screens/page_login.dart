@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:final_test/DB/db/user_dao.dart';
+import 'package:provider/provider.dart';
+import 'package:final_test/DB/provider/user_provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,7 +12,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _userDAO = UserDAO();
   bool _isLoading = false;
   bool _obscurePassword = true;
 
@@ -39,45 +39,41 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      final user = await _userDAO.login(_emailController.text, _passwordController.text);
-      
+      final userProvider = Provider.of<UserProvider>(context, listen: false);
+      final user = await userProvider.login(
+        _emailController.text,
+        _passwordController.text,
+      );
+
       if (user != null) {
         // Đăng nhập thành công
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Đăng nhập thành công!'),
-              backgroundColor: Colors.green,
-            ),
-          );
-          // TODO: Chuyển đến trang chính sau khi đăng nhập thành công
-        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Đăng nhập thành công!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+        // TODO: Navigate to home page
       } else {
         // Đăng nhập thất bại
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email hoặc mật khẩu không đúng'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    } catch (e) {
-      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Có lỗi xảy ra: ${e.toString()}'),
+          const SnackBar(
+            content: Text('Email hoặc mật khẩu không đúng!'),
             backgroundColor: Colors.red,
           ),
         );
       }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Có lỗi xảy ra: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
